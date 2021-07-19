@@ -1,0 +1,20 @@
+FROM node:alpine
+
+WORKDIR '/app'
+
+
+COPY package.json .
+RUN npm install
+
+
+# You don't really need this copy instruction if you're using Docker volumes
+# but left here as a reminder
+COPY . .
+
+# change ownership of ./node_modules to node cause otherwise, we get
+# a permission error when the node user tries to create a .cache directory
+# inside of node_modules
+# You only need this if you're using docker volumes (i.e. only in dev environment)
+RUN chown node:node ./node_modules
+
+CMD ["npm", "run", "start"]
